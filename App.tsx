@@ -7,6 +7,8 @@ import { openDatabaseSync } from "expo-sqlite/next";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { Provider } from "react-redux";
 import { store } from "./src/redux/store";
+import { enGB, registerTranslation } from "react-native-paper-dates";
+registerTranslation("en-GB", enGB);
 
 /**
  * The main component of the application.
