@@ -14,7 +14,6 @@ type Props = {
 
 const RootStack = ({ onboardingStatus }: Props) => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
-  console.log(onboardingStatus ? "AppDrawer" : "Onboarding");
   return (
     <Stack.Navigator
       initialRouteName={onboardingStatus ? "AppDrawer" : "Onboarding"}

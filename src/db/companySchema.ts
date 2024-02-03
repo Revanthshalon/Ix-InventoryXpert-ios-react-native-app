@@ -8,10 +8,10 @@ import { eq } from "drizzle-orm";
 export type Company = {
   id: number;
   name: string;
-  gstNo?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
+  gstNo?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
   existingBalance: number;
 };
 

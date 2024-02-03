@@ -5,7 +5,7 @@ import CompanyForm from "../../screens/company/CompanyForm";
 
 export type JournalStackParamList = {
   Overview: undefined;
-  CompanyForm: { formType: "edit" | "add" };
+  CompanyForm: { formType: "add" } | { formType: "edit"; companyId: number };
 };
 
 const JournalStack = () => {
