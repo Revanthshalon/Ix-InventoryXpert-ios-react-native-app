@@ -13,6 +13,9 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { Appbar, TextInput, useTheme } from "react-native-paper";
 import { Company, getCompanyById, insertCompany } from "../../db/companySchema";
 import DbContext from "../../context/DbContext";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { addNewCompany } from "../../redux/company/CompanySlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -33,16 +36,17 @@ const CompanyForm = () => {
   const [companyDetails, setCompanyDetails] = React.useState<
     Company | undefined
   >(undefined);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
-  React.useEffect(() => {
-    const getCompanyDetails = async () => {
-      if (companyId) {
-        const response = await getCompanyById(db!, companyId);
-        setCompanyDetails(response[0]);
-      }
-    };
-    getCompanyDetails();
-  }, []);
+  const companiesData = useSelector((state: RootState) => state.company);
+  const dispatch = useDispatch<AppDispatch>();
+
+  if (companyId!) {
+    const company = companiesData.companies.find((c) => c.id === companyId);
+    if (company) {
+      setCompanyDetails(company);
+    }
+  }
 
   const goBackHandler = () => {
     setCompanyDetails(undefined);
@@ -50,11 +54,15 @@ const CompanyForm = () => {
   };
 
   const saveCompanyHandler = async () => {
-    const result = await insertCompany(db!, companyDetails!);
-    if (result!) {
-      console.log("Company Saved");
-      console.log(result);
+    if (formType === "edit") {
+    }
+    if (formType === "add") {
+      dispatch(addNewCompany({ db: db!, company: companyDetails! }));
+      companiesData.status === "loading" ? setLoading(true) : setLoading(false);
       goBackHandler();
+      console.log(companiesData.companies);
+      console.log(companiesData.status);
+      companiesData.status = "idle";
     }
   };
 
@@ -69,7 +77,11 @@ const CompanyForm = () => {
         <Appbar.Header mode="small" elevated>
           <Appbar.BackAction onPress={goBackHandler} />
           <Appbar.Content title="Company Form" />
-          <Appbar.Action icon="content-save" onPress={saveCompanyHandler} />
+          <Appbar.Action
+            icon="content-save"
+            onPress={saveCompanyHandler}
+            loading={loading}
+          />
         </Appbar.Header>
         <View style={[styles.formContainer]}>
           <TextInput

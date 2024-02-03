@@ -1,9 +1,13 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { FAB, Portal, useTheme } from "react-native-paper";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { JournalStackParamList } from "../../routes/journal/JournalStack";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux/store";
+import { fetchAllCompanies } from "../../redux/company/CompanySlice";
+import DbContext from "../../context/DbContext";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -11,10 +15,18 @@ type JournalNavigationProp = NativeStackNavigationProp<
 >;
 
 const JournalOverviewScreen = () => {
+  const db = useContext(DbContext);
+
   const JournalNav = useNavigation<JournalNavigationProp>();
+
+  const dispatch = useDispatch<AppDispatch>();
 
   // Action Button Control
   const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    dispatch(fetchAllCompanies(db!));
+  }, []);
 
   return (
     <View
