@@ -2,10 +2,12 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   NativeSyntheticEvent,
+  ScrollView,
   StyleSheet,
   TextInputChangeEventData,
   TouchableWithoutFeedback,
   View,
+  useWindowDimensions,
 } from "react-native";
 import React, { ChangeEvent, useContext } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -152,7 +154,9 @@ const CompanyForm = () => {
             onBlur={(e: NativeSyntheticEvent<TextInputChangeEventData>) => {
               setCompanyDetails({
                 ...companyDetails!,
-                existingBalance: parseFloat(e.nativeEvent.text),
+                existingBalance: parseFloat(
+                  e.nativeEvent.text === "" ? "0" : e.nativeEvent.text
+                ),
               });
             }}
           />
