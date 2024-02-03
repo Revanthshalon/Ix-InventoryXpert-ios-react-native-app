@@ -12,11 +12,12 @@ type Props = {
   onboardingStatus: boolean;
 };
 
-const RootStack = (props: Props) => {
+const RootStack = ({ onboardingStatus }: Props) => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
+  console.log(onboardingStatus ? "AppDrawer" : "Onboarding");
   return (
     <Stack.Navigator
-      initialRouteName={props.onboardingStatus ? "AppDrawer" : "Onboarding"}
+      initialRouteName={onboardingStatus ? "AppDrawer" : "Onboarding"}
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />

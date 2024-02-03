@@ -25,21 +25,18 @@ const RootLayout = () => {
     const prepareApp = async () => {
       if (success && !loadingStatus) {
         setAppReady(true);
-        SplashScreen.hideAsync();
-      } else {
-        if (error) {
-          setAppReady(false);
-          SplashScreen.hideAsync();
-        }
+        await SplashScreen.hideAsync();
+      } else if (error) {
+        throw new Error(error.message);
       }
     };
     prepareApp();
   }, [loadingStatus, success, error]);
 
-  if (error && !appReady) {
+  if (!appReady) {
     return (
       <View>
-        <Text>Error: {error.message}</Text>
+        <Text>Loading...</Text>
       </View>
     );
   }
