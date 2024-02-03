@@ -12,7 +12,7 @@ import { JournalStackParamList } from "../../routes/journal/JournalStack";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import DbContext from "../../context/DbContext";
-import { Payment, getPaymentById } from "../../db/paymentSchema";
+import { Payment } from "../../db/paymentSchema";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import DropDown from "react-native-paper-dropdown";
@@ -73,8 +73,6 @@ const PaymentForm = () => {
     }
   };
 
-  console.log(paymentsData.payments);
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View
@@ -86,7 +84,11 @@ const PaymentForm = () => {
         <Appbar.Header mode="small" elevated>
           <Appbar.BackAction onPress={goBackHandler} />
           <Appbar.Content title="Payment Form" />
-          <Appbar.Action icon="content-save" onPress={savePaymentHandler} />
+          <Appbar.Action
+            icon="content-save"
+            onPress={savePaymentHandler}
+            loading={loading}
+          />
         </Appbar.Header>
         <View style={[styles.formContainer]}>
           <DropDown

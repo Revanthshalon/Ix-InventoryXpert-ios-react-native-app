@@ -60,7 +60,9 @@ const JournalOverviewScreen = () => {
           {
             icon: "cart",
             label: "Add Purchase",
-            onPress: () => console.log("Pressed notifications"),
+            onPress: () => {
+              JournalNav.push("PurchaseForm", { formType: "add" });
+            },
           },
         ]}
         onStateChange={({ open }) => setOpen(open)}
