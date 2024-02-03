@@ -45,7 +45,7 @@ export const getCompanyById = async (
   id: number
 ) => {
   const result = await db.select().from(companies).where(eq(companies.id, id));
-  return result[0];
+  return result;
 };
 
 /**
@@ -59,12 +59,9 @@ export const insertCompany = async (
   db: ExpoSQLiteDatabase<Record<string, never>>,
   company: newCompany
 ) => {
-  const result = await db
-    .insert(companies)
-    .values(company)
-    .returning({ insertedId: companies.id });
+  const result = await db.insert(companies).values(company).returning();
 
-  return result[0].insertedId;
+  return result[0];
 };
 
 /**

@@ -1,25 +1,16 @@
 import {
   Keyboard,
-  KeyboardAvoidingView,
   NativeSyntheticEvent,
-  ScrollView,
   StyleSheet,
   TextInputChangeEventData,
   TouchableWithoutFeedback,
   View,
-  useWindowDimensions,
 } from "react-native";
-import React, { ChangeEvent, useContext } from "react";
+import React, { useContext } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { JournalStackParamList } from "../../routes/journal/JournalStack";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import {
-  Appbar,
-  Button,
-  HelperText,
-  TextInput,
-  useTheme,
-} from "react-native-paper";
+import { Appbar, TextInput, useTheme } from "react-native-paper";
 import { Company, getCompanyById, insertCompany } from "../../db/companySchema";
 import DbContext from "../../context/DbContext";
 
@@ -47,7 +38,7 @@ const CompanyForm = () => {
     const getCompanyDetails = async () => {
       if (companyId) {
         const response = await getCompanyById(db!, companyId);
-        setCompanyDetails(response);
+        setCompanyDetails(response[0]);
       }
     };
     getCompanyDetails();

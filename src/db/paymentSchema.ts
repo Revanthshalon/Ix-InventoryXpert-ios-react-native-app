@@ -1,4 +1,6 @@
+import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import { payments } from "./schema";
+import { eq } from "drizzle-orm";
 
 /**
  * Represents a payment entry in the database.
@@ -9,10 +11,114 @@ export type Payment = {
   amount: number;
   date: Date;
   paymentStatus: "paid" | "pending";
-  remarks?: string;
+  remarks?: string | null;
 };
 
 /**
  * Represents the type of a new payment entry in the database.
  */
 export type newPayment = typeof payments.$inferInsert;
+
+/**
+ * Retrieves all payments from the database.
+ *
+ * @param db - The database connection.
+ * @returns A promise that resolves to an array of payment entries.
+ */
+export const getAllPayments = async (
+  db: ExpoSQLiteDatabase<Record<string, never>>
+) => {
+  const results = await db.select().from(payments);
+  return results;
+};
+
+/**
+ * Retrieves a payment from the database by its ID.
+ *
+ * @param db - The database connection.
+ * @param id - The ID of the payment to retrieve.
+ * @returns A promise that resolves to the payment entry.
+ */
+
+export const getPaymentById = async (
+  db: ExpoSQLiteDatabase<Record<string, never>>,
+  id: number
+) => {
+  const result = await db.select().from(payments).where(eq(payments.id, id));
+  return result[0];
+};
+
+/**
+ * Inserts a new payment into the database.
+ *
+ * @param db - The database connection.
+ * @param payment - The payment to insert.
+ * @returns A promise that resolves to the ID of the new payment entry.
+ */
+export const insertPayment = async (
+  db: ExpoSQLiteDatabase<Record<string, never>>,
+  payment: newPayment
+) => {
+  const result = await db
+    .insert(payments)
+    .values(payment)
+    .returning({ insertedId: payments.id });
+
+  return result[0].insertedId;
+};
+
+/**
+ * Updates an existing payment in the database.
+ *
+ * @param db - The database connection.
+ * @param id - The ID of the payment to update.
+ * @param payment - The new payment data.
+ * @returns A promise that resolves to the number of rows affected.
+ */
+
+export const updatePayment = async (
+  db: ExpoSQLiteDatabase<Record<string, never>>,
+  id: number,
+  payment: Payment
+) => {
+  const result = await db
+    .update(payments)
+    .set(payment)
+    .where(eq(payments.id, id));
+
+  return result;
+};
+
+/**
+ * Deletes a payment from the database by its ID.
+ *
+ * @param db - The database connection.
+ * @param id - The ID of the payment to delete.
+ * @returns A promise that resolves to the number of rows affected.
+ */
+export const deletePayment = async (
+  db: ExpoSQLiteDatabase<Record<string, never>>,
+  id: number
+) => {
+  const result = await db.delete(payments).where(eq(payments.id, id));
+
+  return result;
+};
+
+/**
+ * Retrieves all payments for a company from the database.
+ *
+ * @param db - The database connection.
+ * @param companyId - The ID of the company.
+ * @returns A promise that resolves to an array of payment entries.
+ */
+export const getPaymentsByCompany = async (
+  db: ExpoSQLiteDatabase<Record<string, never>>,
+  companyId: number
+) => {
+  const results = await db
+    .select()
+    .from(payments)
+    .where(eq(payments.companyId, companyId));
+  return results;
+};

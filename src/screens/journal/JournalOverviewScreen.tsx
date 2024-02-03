@@ -39,7 +39,9 @@ const JournalOverviewScreen = () => {
           {
             icon: "credit-card",
             label: "Add Payment",
-            onPress: () => console.log("Pressed email"),
+            onPress: () => {
+              JournalNav.push("PaymentForm", { formType: "add" });
+            },
           },
           {
             icon: "cart",
