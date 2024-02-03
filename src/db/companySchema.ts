@@ -1,3 +1,5 @@
+import { companies } from "./schema";
+
 /**
  * Represents a company entry in the database.
  */
@@ -10,3 +12,8 @@ export type Company = {
   email?: string;
   existingBalance: number;
 };
+
+/**
+ * Represents the type of a new company entry in the database.
+ */
+export type newCompany = typeof companies.$inferInsert;

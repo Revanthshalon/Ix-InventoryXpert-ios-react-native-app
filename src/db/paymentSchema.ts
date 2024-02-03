@@ -1,3 +1,5 @@
+import { payments } from "./schema";
+
 /**
  * Represents a payment entry in the database.
  */
@@ -9,3 +11,8 @@ export type Payment = {
   paymentStatus: "paid" | "pending";
   remarks?: string;
 };
+
+/**
+ * Represents the type of a new payment entry in the database.
+ */
+export type newPayment = typeof payments.$inferInsert;

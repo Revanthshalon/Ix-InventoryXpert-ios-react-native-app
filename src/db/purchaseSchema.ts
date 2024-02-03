@@ -1,3 +1,5 @@
+import { purchases } from "./schema";
+
 /**
  * Represents a purchase entry in the database.
  */
@@ -9,3 +11,9 @@ export type Purchase = {
   billNo?: string;
   remarks?: string;
 };
+
+/**
+ * Represents the type of a new payment entry in the database.
+ * It is inferred from the "purchases" schema.
+ */
+export type newPayment = typeof purchases.$inferInsert;
