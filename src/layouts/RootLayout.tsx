@@ -23,6 +23,14 @@ const RootLayout = () => {
      * If there is an error, the app readiness state is set to false.
      */
     const prepareApp = async () => {
+      console.log(
+        "success",
+        success,
+        "loadingStatus",
+        loadingStatus,
+        "error",
+        error
+      );
       if (success && !loadingStatus) {
         setAppReady(true);
         await SplashScreen.hideAsync();
