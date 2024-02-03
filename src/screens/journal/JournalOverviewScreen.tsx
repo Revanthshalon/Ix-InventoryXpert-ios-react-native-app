@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import { fetchAllCompanies } from "../../redux/company/CompanySlice";
 import DbContext from "../../context/DbContext";
+import { fetchAllPayments } from "../../redux/payment/paymentSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -26,6 +27,7 @@ const JournalOverviewScreen = () => {
 
   React.useEffect(() => {
     dispatch(fetchAllCompanies(db!));
+    dispatch(fetchAllPayments(db!));
   }, []);
 
   return (

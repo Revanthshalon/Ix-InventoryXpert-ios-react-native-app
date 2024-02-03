@@ -45,7 +45,7 @@ export const getPaymentById = async (
   id: number
 ) => {
   const result = await db.select().from(payments).where(eq(payments.id, id));
-  return result[0];
+  return result;
 };
 
 /**
@@ -59,12 +59,9 @@ export const insertPayment = async (
   db: ExpoSQLiteDatabase<Record<string, never>>,
   payment: newPayment
 ) => {
-  const result = await db
-    .insert(payments)
-    .values(payment)
-    .returning({ insertedId: payments.id });
+  const result = await db.insert(payments).values(payment).returning();
 
-  return result[0].insertedId;
+  return result[0];
 };
 
 /**
@@ -84,9 +81,10 @@ export const updatePayment = async (
   const result = await db
     .update(payments)
     .set(payment)
-    .where(eq(payments.id, id));
+    .where(eq(payments.id, id))
+    .returning();
 
-  return result;
+  return result[0];
 };
 
 /**
@@ -100,9 +98,12 @@ export const deletePayment = async (
   db: ExpoSQLiteDatabase<Record<string, never>>,
   id: number
 ) => {
-  const result = await db.delete(payments).where(eq(payments.id, id));
+  const result = await db
+    .delete(payments)
+    .where(eq(payments.id, id))
+    .returning();
 
-  return result;
+  return result[0];
 };
 
 /**
