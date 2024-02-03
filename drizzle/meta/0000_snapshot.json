@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "7d7314da-e398-479a-bff7-365d3f8993cf",
+  "id": "c291575b-ef41-48e1-a16f-62814f31a3e3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "companies": {
@@ -118,7 +118,7 @@
         },
         "date": {
           "name": "date",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -184,7 +184,7 @@
         },
         "date": {
           "name": "date",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

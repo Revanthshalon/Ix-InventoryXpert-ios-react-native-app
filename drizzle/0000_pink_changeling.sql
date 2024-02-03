@@ -12,7 +12,7 @@ CREATE TABLE `payments` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`companyId` integer NOT NULL,
 	`amount` real NOT NULL,
-	`date` integer NOT NULL,
+	`date` text NOT NULL,
 	`paymentStatus` text DEFAULT 'pending' NOT NULL,
 	`remarks` text,
 	FOREIGN KEY (`companyId`) REFERENCES `companies`(`id`) ON UPDATE no action ON DELETE cascade
@@ -22,7 +22,7 @@ CREATE TABLE `purchases` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`companyId` integer NOT NULL,
 	`amount` real NOT NULL,
-	`date` integer NOT NULL,
+	`date` text NOT NULL,
 	`billNo` text,
 	`remarks` text,
 	FOREIGN KEY (`companyId`) REFERENCES `companies`(`id`) ON UPDATE no action ON DELETE cascade

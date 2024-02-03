@@ -1,6 +1,6 @@
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
-import { payments } from "./schema";
-import { eq } from "drizzle-orm";
+import { companies, payments } from "./schema";
+import { and, eq, gte } from "drizzle-orm";
 
 /**
  * Represents a payment entry in the database.
@@ -9,7 +9,7 @@ export type Payment = {
   id: number;
   companyId: number;
   amount: number;
-  date: Date;
+  date: string;
   paymentStatus: "paid" | "pending";
   remarks?: string | null;
 };
@@ -121,5 +121,25 @@ export const getPaymentsByCompany = async (
     .select()
     .from(payments)
     .where(eq(payments.companyId, companyId));
+  return results;
+};
+
+export const getUpcomingPayments = async (
+  db: ExpoSQLiteDatabase<Record<string, never>>
+) => {
+  const results = await db
+    .select({
+      name: companies.name,
+      amount: payments.amount,
+      date: payments.date,
+    })
+    .from(payments)
+    .leftJoin(companies, eq(payments.companyId, companies.id))
+    .where(
+      and(
+        eq(payments.paymentStatus, "pending"),
+        gte(payments.date, new Date().toString())
+      )
+    );
   return results;
 };

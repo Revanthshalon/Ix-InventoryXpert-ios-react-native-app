@@ -4,11 +4,15 @@ import { FAB, Portal, useTheme } from "react-native-paper";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { JournalStackParamList } from "../../routes/journal/JournalStack";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 import { fetchAllCompanies } from "../../redux/company/CompanySlice";
 import DbContext from "../../context/DbContext";
 import { fetchAllPayments } from "../../redux/payment/paymentSlice";
+import { fetchAllPurchases } from "../../redux/purchase/PurchaseSlice";
+import CustomHeader from "../components/CustomHeader";
+import CustomCardWithTable from "../components/CustomCardWithTable";
+import { fetchUpcomingPayments } from "../../redux/journal/JournalSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -24,11 +28,31 @@ const JournalOverviewScreen = () => {
 
   // Action Button Control
   const [open, setOpen] = React.useState(false);
+  const [enrichedUpcomingPayments, setEnrichedUpcomingPayments] =
+    React.useState<any>([]);
 
   React.useEffect(() => {
     dispatch(fetchAllCompanies(db!));
     dispatch(fetchAllPayments(db!));
+    dispatch(fetchAllPurchases(db!));
+    dispatch(fetchUpcomingPayments(db!));
   }, []);
+
+  const journalUpcomingPayments = useSelector(
+    (state: RootState) => state.journal.upcomingPayments
+  );
+
+  // setEnrichedUpcomingPayments(
+  //   journalUpcomingPayments?.map((r) => {
+  //     return {
+  //       name: r.companyId,
+  //       date: r.date,
+  //       amount: r.amount,
+  //     };
+  //   })
+  // );
+
+  console.log(journalUpcomingPayments);
 
   return (
     <View
@@ -37,8 +61,23 @@ const JournalOverviewScreen = () => {
         { backgroundColor: useTheme().colors.background },
       ]}
     >
+      <CustomHeader />
+      <ScrollView>
+        <ScrollView horizontal>
+          <CustomCardWithTable
+            cardTitle="Upcoming Payments"
+            cardSubtitle="this week"
+            dataMapping={[
+              { column: "Company", key: "name" },
+              { column: "Due Date", key: "date" },
+              { column: "Amount", key: "amount", customStyling: "currency" },
+            ]}
+            data={journalUpcomingPayments!}
+          />
+        </ScrollView>
+      </ScrollView>
       <FAB.Group
-        style={{ position: "absolute", bottom: 16, right: 16 }}
+        style={{ position: "absolute" }}
         open={open}
         visible
         icon={open ? "close" : "plus"}

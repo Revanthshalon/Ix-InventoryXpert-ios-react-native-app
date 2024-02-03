@@ -9,7 +9,7 @@ export type Purchase = {
   id: number;
   companyId: number;
   amount: number;
-  date: Date;
+  date: string;
   billNo?: string | null;
   remarks?: string | null;
 };

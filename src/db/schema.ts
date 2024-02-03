@@ -26,7 +26,7 @@ export const purchases = sqliteTable("purchases", {
     .references(() => companies.id, { onDelete: "cascade" })
     .notNull(),
   amount: real("amount").notNull(),
-  date: integer("date", { mode: "timestamp" }).notNull(),
+  date: text("date").notNull(),
   billNo: text("billNo"),
   remarks: text("remarks"),
 });
@@ -40,7 +40,7 @@ export const payments = sqliteTable("payments", {
     .references(() => companies.id, { onDelete: "cascade" })
     .notNull(),
   amount: real("amount").notNull(),
-  date: integer("date", { mode: "timestamp" }).notNull(),
+  date: text("date").notNull(),
   paymentStatus: text("paymentStatus", { enum: ["paid", "pending"] })
     .default("pending")
     .notNull(),
