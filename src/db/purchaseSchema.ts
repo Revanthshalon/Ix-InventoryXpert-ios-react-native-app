@@ -10,15 +10,15 @@ export type Purchase = {
   companyId: number;
   amount: number;
   date: Date;
-  billNo?: string;
-  remarks?: string;
+  billNo?: string | null;
+  remarks?: string | null;
 };
 
 /**
  * Represents the type of a new payment entry in the database.
  * It is inferred from the "purchases" schema.
  */
-export type newPayment = typeof purchases.$inferInsert;
+export type newPurchase = typeof purchases.$inferInsert;
 
 /**
  * Retrieves all purchases from the database.
@@ -57,7 +57,7 @@ export const getPurchaseById = async (
  */
 export const insertPurchase = async (
   db: ExpoSQLiteDatabase<Record<string, never>>,
-  purchase: newPayment
+  purchase: newPurchase
 ) => {
   const newPurchase = await db.insert(purchases).values(purchase).returning();
   return newPurchase[0];
@@ -91,7 +91,7 @@ export const updatePurchase = async (
  * @param id - The ID of the purchase to delete.
  * @returns A promise that resolves to the number of deleted rows.
  */
-export const deletePurchaseById = async (
+export const deletePurchase = async (
   db: ExpoSQLiteDatabase<Record<string, never>>,
   id: number
 ) => {
