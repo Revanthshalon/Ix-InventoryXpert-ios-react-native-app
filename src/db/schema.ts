@@ -1,5 +1,12 @@
+/**
+ * Defines the SQLite database schema for the inventory-xpert-ios application.
+ */
+
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+/**
+ * Represents the "companies" table in the database.
+ */
 export const companies = sqliteTable("companies", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").unique().notNull(),
@@ -10,6 +17,9 @@ export const companies = sqliteTable("companies", {
   existingBalance: real("existingBalance").default(0.0).notNull(),
 });
 
+/**
+ * Represents the "purchases" table in the database.
+ */
 export const purchases = sqliteTable("purchases", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   companyId: integer("companyId")
@@ -21,6 +31,9 @@ export const purchases = sqliteTable("purchases", {
   remarks: text("remarks"),
 });
 
+/**
+ * Represents the "payments" table in the database.
+ */
 export const payments = sqliteTable("payments", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   companyId: integer("companyId")
