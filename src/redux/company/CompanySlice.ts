@@ -1,3 +1,9 @@
+/**
+ * This file contains the Redux slice for managing the company state.
+ * It includes action creators and reducers for fetching, adding, updating, and deleting companies.
+ * The slice also defines the initial state and the structure of the company object.
+ */
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   Company,
@@ -10,11 +16,13 @@ import {
 } from "../../db/companySchema";
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 
+// Define the initial state of the company slice
 const initialState = {
   companies: [] as Company[],
   status: "idle" as "idle" | "loading" | "succeeded" | "failed",
 };
 
+// Define the async thunk for fetching all companies
 export const fetchAllCompanies = createAsyncThunk(
   "company/fetchAllCompanies",
   async (db: ExpoSQLiteDatabase<Record<string, never>>) => {
@@ -24,6 +32,12 @@ export const fetchAllCompanies = createAsyncThunk(
   }
 );
 
+/**
+ * Fetches a company by its ID from the database.
+ * @param db - The ExpoSQLiteDatabase instance.
+ * @param id - The ID of the company to fetch.
+ * @returns A promise that resolves to the fetched company.
+ */
 export const fetchCompanyById = createAsyncThunk(
   "company/fetchCompanyById",
   async ({
@@ -38,6 +52,7 @@ export const fetchCompanyById = createAsyncThunk(
   }
 );
 
+// Define the async thunk for adding a new company
 export const addNewCompany = createAsyncThunk(
   "company/addNewCompany",
   async ({
@@ -52,6 +67,7 @@ export const addNewCompany = createAsyncThunk(
   }
 );
 
+// Define the async thunk for updating a company by its ID
 export const updateCompanyById = createAsyncThunk(
   "company/updateCompanyById",
   async ({
@@ -68,6 +84,7 @@ export const updateCompanyById = createAsyncThunk(
   }
 );
 
+// Define the async thunk for deleting a company by its ID
 export const deleteCompanyById = createAsyncThunk(
   "company/deleteCompanyById",
   async ({
@@ -82,6 +99,7 @@ export const deleteCompanyById = createAsyncThunk(
   }
 );
 
+// Create the company slice
 const companySlice = createSlice({
   name: "company",
   initialState,
