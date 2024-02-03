@@ -34,11 +34,7 @@ const RootLayout = () => {
   }, [loadingStatus, success, error]);
 
   if (!appReady) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return null;
   }
 
   return <RootStack onboardingStatus={onboardingStatus} />;
