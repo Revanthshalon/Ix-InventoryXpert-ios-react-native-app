@@ -137,3 +137,5 @@ const purchaseSlice = createSlice({
       });
   },
 });
+
+export default purchaseSlice.reducer;
