@@ -18,8 +18,12 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { Appbar, FAB, TextInput, useTheme } from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
 import { DatePickerInput } from "react-native-paper-dates";
-import { addNewPurchase } from "../../redux/purchase/PurchaseSlice";
+import {
+  addNewPurchase,
+  updatePurchaseById,
+} from "../../redux/purchase/PurchaseSlice";
 import { fetchAllCompanies } from "../../redux/company/CompanySlice";
+import { fetchRelatedPurchases } from "../../redux/company/RelatedPurchasesSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -46,6 +50,9 @@ const PurchaseForm = () => {
   >(purchasesData.purchases.find((p) => p.id === purchaseId));
   const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [purchaseAmount, setPurchaseAmount] = React.useState<
+    string | undefined
+  >(purchaseDetails?.amount?.toString());
   const [companiesList, setCompaniesList] = React.useState<
     { label: string; value: number }[]
   >(
@@ -62,6 +69,23 @@ const PurchaseForm = () => {
 
   const savePurchaseHandler = async () => {
     if (formType === "edit") {
+      dispatch(
+        updatePurchaseById({
+          db: db!,
+          id: purchaseDetails!.id,
+          purchase: purchaseDetails!,
+        })
+      );
+      purchasesData.status === "loading" ? setLoading(true) : setLoading(false);
+      goBackHandler();
+      purchasesData.status = "idle";
+      dispatch(fetchAllCompanies(db!));
+      dispatch(
+        fetchRelatedPurchases({
+          db: db!,
+          companyId: purchaseDetails!.companyId!,
+        })
+      );
     }
     if (formType === "add") {
       dispatch(addNewPurchase({ db: db!, purchase: purchaseDetails! }));
@@ -115,11 +139,12 @@ const PurchaseForm = () => {
             mode="outlined"
             label="Amount"
             placeholder="Enter Amount"
-            value={purchaseDetails?.amount?.toString()}
+            value={purchaseAmount}
+            onChangeText={setPurchaseAmount}
             onBlur={(e: NativeSyntheticEvent<TextInputChangeEventData>) => {
               setPurchaseDetails({
                 ...purchaseDetails!,
-                amount: parseFloat(e.nativeEvent.text),
+                amount: parseFloat(purchaseAmount!),
               });
             }}
           />

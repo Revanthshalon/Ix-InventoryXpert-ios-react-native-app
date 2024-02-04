@@ -24,9 +24,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import DropDown from "react-native-paper-dropdown";
 import { DatePickerInput } from "react-native-paper-dates";
-import { addNewPayment } from "../../redux/payment/paymentSlice";
+import {
+  addNewPayment,
+  updatePaymentById,
+} from "../../redux/payment/paymentSlice";
 import { fetchUpcomingPayments } from "../../redux/journal/JournalSlice";
 import { fetchAllCompanies } from "../../redux/company/CompanySlice";
+import { fetchRelatedPayments } from "../../redux/company/RelatedPaymentSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -54,6 +58,9 @@ const PaymentForm = () => {
   console.log(paymentDetails);
   const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [paymentAmount, setPaymentAmount] = React.useState<string | undefined>(
+    paymentDetails?.amount?.toString()
+  );
   const [companiesList, setCompaniesList] = React.useState<
     { label: string; value: number }[]
   >(
@@ -70,6 +77,22 @@ const PaymentForm = () => {
 
   const savePaymentHandler = async () => {
     if (formType === "edit") {
+      console.log(paymentDetails!);
+      dispatch(
+        updatePaymentById({
+          db: db!,
+          id: paymentDetails!.id,
+          payment: paymentDetails!,
+        })
+      );
+      dispatch(fetchUpcomingPayments(db!));
+      dispatch(
+        fetchRelatedPayments({ db: db!, companyId: paymentDetails!.companyId! })
+      );
+      dispatch(fetchAllCompanies(db!));
+      paymentsData.status === "loading" ? setLoading(true) : setLoading(false);
+      goBackHandler();
+      paymentsData.status = "idle";
     }
     if (formType === "add") {
       console.log(paymentDetails!);
@@ -126,11 +149,12 @@ const PaymentForm = () => {
             mode="outlined"
             label="Amount"
             placeholder="Enter Amount"
-            value={paymentDetails?.amount?.toString()}
-            onBlur={(e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+            value={paymentAmount}
+            onChangeText={setPaymentAmount}
+            onBlur={() => {
               setPaymentDetails({
                 ...paymentDetails!,
-                amount: parseFloat(e.nativeEvent.text),
+                amount: parseFloat(paymentAmount!),
               });
             }}
           />
