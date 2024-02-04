@@ -133,7 +133,7 @@ const CustomCardWithTable = ({
           }}
         />
       </DataTable>
-      <View style={[styles.buttonContainer]}>
+      {/* <View style={[styles.buttonContainer]}>
         <Button
           style={[styles.buttonStyle, buttonStyle]}
           mode="outlined"
@@ -141,7 +141,7 @@ const CustomCardWithTable = ({
         >
           View All
         </Button>
-      </View>
+      </View> */}
     </Surface>
   );
 };
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: StyleSheet.hairlineWidth,
     margin: 10,
-    height: 400,
+    maxHeight: 400,
     paddingBottom: 10,
   },
   labelContainer: {

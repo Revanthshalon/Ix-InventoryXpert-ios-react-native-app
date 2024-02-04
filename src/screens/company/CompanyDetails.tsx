@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import React, { useContext } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack/lib/typescript/src/types";
 import { JournalStackParamList } from "../../routes/journal/JournalStack";
@@ -58,7 +58,9 @@ const CompanyDetails = () => {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: useTheme().colors.background }}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: useTheme().colors.background }}
+    >
       <Appbar.Header mode="small" elevated>
         <Appbar.BackAction onPress={() => JournalNav.goBack()} />
         <Appbar.Content title="Company Details" />
@@ -88,19 +90,21 @@ const CompanyDetails = () => {
         </Dialog>
       </Portal>
       <CompanyInfoCard companyDetails={companyDetails!} />
-      <CustomCardWithTable
-        cardTitle="Related Purchases"
-        data={companyRelatedPurchases}
-        dataMapping={[
-          { column: "Purchase Date", key: "date", customStyling: "date" },
-          {
-            column: "Purchase Amount",
-            key: "amount",
-            customStyling: "currency",
-          },
-        ]}
-      />
-    </View>
+      <ScrollView horizontal>
+        <CustomCardWithTable
+          cardTitle="Related Purchases"
+          data={companyRelatedPurchases}
+          dataMapping={[
+            { column: "Purchase Date", key: "date", customStyling: "date" },
+            {
+              column: "Purchase Amount",
+              key: "amount",
+              customStyling: "currency",
+            },
+          ]}
+        />
+      </ScrollView>
+    </ScrollView>
   );
 };
 
