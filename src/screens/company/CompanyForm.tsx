@@ -33,20 +33,15 @@ const CompanyForm = () => {
   const companyId =
     formType === "edit" ? JournalRoute.params.companyId : undefined;
 
-  const [companyDetails, setCompanyDetails] = React.useState<
-    Company | undefined
-  >(undefined);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  console.log(formType, companyId);
 
   const companiesData = useSelector((state: RootState) => state.company);
   const dispatch = useDispatch<AppDispatch>();
 
-  if (companyId!) {
-    const company = companiesData.companies.find((c) => c.id === companyId);
-    if (company) {
-      setCompanyDetails(company);
-    }
-  }
+  const [companyDetails, setCompanyDetails] = React.useState<
+    Company | undefined
+  >(companiesData.companies.find((c) => c.id === companyId));
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const goBackHandler = () => {
     setCompanyDetails(undefined);
