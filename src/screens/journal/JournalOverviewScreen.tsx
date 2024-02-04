@@ -46,10 +46,6 @@ const JournalOverviewScreen = () => {
     (state: RootState) => state.purchase.purchases
   );
 
-  // console.log(journalUpcomingPayments);
-  // console.log(companiesData);
-  // console.log(purchasesData);
-
   return (
     <View
       style={[
@@ -90,6 +86,9 @@ const JournalOverviewScreen = () => {
               },
             ]}
             data={companiesData!}
+            rowOnPress={(id: number) => {
+              JournalNav.push("CompanyDetails", { companyId: id });
+            }}
           />
         </ScrollView>
       </ScrollView>
