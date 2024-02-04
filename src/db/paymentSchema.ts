@@ -60,7 +60,7 @@ export const insertPayment = async (
   payment: newPayment
 ) => {
   const result = await db.insert(payments).values(payment).returning();
-
+  console.log(result[0]);
   return result[0];
 };
 

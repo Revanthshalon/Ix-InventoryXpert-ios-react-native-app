@@ -19,6 +19,7 @@ import DropDown from "react-native-paper-dropdown";
 import { DatePickerInput } from "react-native-paper-dates";
 import { addNewPayment } from "../../redux/payment/paymentSlice";
 import { fetchUpcomingPayments } from "../../redux/journal/JournalSlice";
+import { fetchAllCompanies } from "../../redux/company/CompanySlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -67,11 +68,13 @@ const PaymentForm = () => {
     if (formType === "edit") {
     }
     if (formType === "add") {
+      console.log(paymentDetails!);
       dispatch(addNewPayment({ db: db!, payment: paymentDetails! }));
       paymentsData.status === "loading" ? setLoading(true) : setLoading(false);
       goBackHandler();
       paymentsData.status = "idle";
       dispatch(fetchUpcomingPayments(db!));
+      dispatch(fetchAllCompanies(db!));
     }
   };
 
@@ -175,6 +178,7 @@ const PaymentForm = () => {
             <Switch
               value={paymentDetails?.paymentStatus === "paid" ? true : false}
               onValueChange={(value) => {
+                console.log(value);
                 setPaymentDetails({
                   ...paymentDetails!,
                   paymentStatus: value ? "paid" : "pending",

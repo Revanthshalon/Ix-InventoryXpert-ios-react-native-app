@@ -1,6 +1,7 @@
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import { companies, payments, purchases } from "./schema";
 import { eq, sql, sum } from "drizzle-orm";
+import { unionAll } from "drizzle-orm/sqlite-core";
 
 /**
  * Represents a company entry in the database.
@@ -29,17 +30,30 @@ export type newCompany = typeof companies.$inferInsert;
 export const getAllCompanies = async (
   db: ExpoSQLiteDatabase<Record<string, never>>
 ) => {
-  const results = await db.select().from(companies);
-  const totalPaymentsByCompany = await db
+  const paymentTotal = db
     .select({
       companyId: payments.companyId,
-      totalPayments: sum(payments.amount),
+      paymentAmount: sql`cast(sum(${payments.amount}) as real)`.as(
+        "paymentAmount"
+      ),
     })
     .from(payments)
+    .where(eq(payments.paymentStatus, "paid"))
     .groupBy(payments.companyId)
-    .having(eq(payments.paymentStatus, "pending"));
+    .as("paymentTotal");
 
-  const test = await db
+  const purchaseTotal = db
+    .select({
+      companyId: purchases.companyId,
+      purchaseAmount: sql`cast(sum(${purchases.amount}) as real)`.as(
+        "purchaseAmount"
+      ),
+    })
+    .from(purchases)
+    .groupBy(purchases.companyId)
+    .as("purchaseTotal");
+
+  const results = await db
     .select({
       id: companies.id,
       name: companies.name,
@@ -47,19 +61,15 @@ export const getAllCompanies = async (
       address: companies.address,
       phone: companies.phone,
       email: companies.email,
-      existingBalance: sql<number>`(${
-        companies.existingBalance
-      } + COALESCE(${sum(purchases.amount)},0))- COALESCE(${sum(
-        payments.amount
-      )},0)`,
+      existingBalance: sql<number>`cast(${companies.existingBalance} as real) - coalesce(${paymentTotal.paymentAmount}, 0) + coalesce(${purchaseTotal.purchaseAmount}, 0) as existingBalance`,
+      paymentAmount: paymentTotal.paymentAmount,
     })
     .from(companies)
-    .leftJoin(payments, eq(payments.companyId, companies.id))
-    .leftJoin(purchases, eq(purchases.companyId, companies.id))
-    .groupBy(companies.id)
-    .having(eq(payments.paymentStatus, "pending"));
+    .leftJoin(paymentTotal, eq(companies.id, paymentTotal.companyId))
+    .leftJoin(purchaseTotal, eq(companies.id, purchaseTotal.companyId));
+  console.log(results);
 
-  return test;
+  return results;
 };
 
 /**

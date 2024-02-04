@@ -42,9 +42,13 @@ const JournalOverviewScreen = () => {
   const companiesData = useSelector(
     (state: RootState) => state.company.companies
   );
+  const purchasesData = useSelector(
+    (state: RootState) => state.purchase.purchases
+  );
 
-  console.log(journalUpcomingPayments);
-  console.log(companiesData);
+  // console.log(journalUpcomingPayments);
+  // console.log(companiesData);
+  // console.log(purchasesData);
 
   return (
     <View

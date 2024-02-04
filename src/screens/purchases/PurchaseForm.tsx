@@ -19,6 +19,8 @@ import { Appbar, TextInput, useTheme } from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
 import { DatePickerInput } from "react-native-paper-dates";
 import { addNewPurchase } from "../../redux/purchase/PurchaseSlice";
+import { getAllCompanies } from "../../db/companySchema";
+import { fetchAllCompanies } from "../../redux/company/CompanySlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -71,6 +73,7 @@ const PurchaseForm = () => {
       purchasesData.status === "loading" ? setLoading(true) : setLoading(false);
       goBackHandler();
       purchasesData.status = "idle";
+      dispatch(fetchAllCompanies(db!));
     }
   };
 
