@@ -109,6 +109,12 @@ const CompanyDetails = () => {
                 customStyling: "currency",
               },
             ]}
+            rowOnPress={(id: number) => {
+              JournalNav.push("PurchaseForm", {
+                formType: "edit",
+                purchaseId: id,
+              });
+            }}
           />
         </ScrollView>
         <ScrollView horizontal>
@@ -127,6 +133,12 @@ const CompanyDetails = () => {
                 key: "paymentStatus",
               },
             ]}
+            rowOnPress={(id: number) => {
+              JournalNav.push("PaymentForm", {
+                formType: "edit",
+                paymentId: id,
+              });
+            }}
           />
         </ScrollView>
       </ScrollView>

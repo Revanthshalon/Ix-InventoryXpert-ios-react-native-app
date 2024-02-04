@@ -37,27 +37,23 @@ const PaymentForm = () => {
   const paymentId =
     formType === "edit" ? JournalRoute.params.paymentId : undefined;
 
-  const [paymentDetails, setPaymentDetails] = React.useState<
-    Payment | undefined
-  >(undefined);
-  const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
-
   const paymentsData = useSelector((state: RootState) => state.payment);
   const companiesData = useSelector((state: RootState) => state.company);
   const dispatch = useDispatch<AppDispatch>();
 
-  const companiesList = companiesData.companies.map((company) => ({
-    label: company.name,
-    value: company.id,
-  }));
-
-  if (paymentId!) {
-    const payment = paymentsData.payments.find((p) => p.id === paymentId);
-    if (payment) {
-      setPaymentDetails(payment);
-    }
-  }
+  const [paymentDetails, setPaymentDetails] = React.useState<
+    Payment | undefined
+  >(paymentsData.payments.find((p) => p.id === paymentId));
+  const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [companiesList, setCompaniesList] = React.useState<
+    { label: string; value: number }[]
+  >(
+    companiesData.companies.map((company) => ({
+      label: company.name,
+      value: company.id,
+    }))
+  );
 
   const goBackHandler = () => {
     setPaymentDetails(undefined);
@@ -88,7 +84,9 @@ const PaymentForm = () => {
       >
         <Appbar.Header mode="small" elevated>
           <Appbar.BackAction onPress={goBackHandler} />
-          <Appbar.Content title="Payment Form" />
+          <Appbar.Content
+            title={`${formType === "add" ? "Add" : "Edit"} Payment`}
+          />
           <Appbar.Action
             icon="content-save"
             onPress={savePaymentHandler}

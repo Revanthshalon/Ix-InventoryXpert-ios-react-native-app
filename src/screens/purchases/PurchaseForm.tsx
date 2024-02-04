@@ -19,7 +19,6 @@ import { Appbar, TextInput, useTheme } from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
 import { DatePickerInput } from "react-native-paper-dates";
 import { addNewPurchase } from "../../redux/purchase/PurchaseSlice";
-import { getAllCompanies } from "../../db/companySchema";
 import { fetchAllCompanies } from "../../redux/company/CompanySlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
@@ -38,27 +37,23 @@ const PurchaseForm = () => {
   const purchaseId =
     formType === "edit" ? JournalRoute.params.purchaseId : undefined;
 
-  const [purchaseDetails, setPurchaseDetails] = React.useState<
-    Purchase | undefined
-  >(undefined);
-  const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
-
   const purchasesData = useSelector((state: RootState) => state.purchase);
   const companiesData = useSelector((state: RootState) => state.company);
   const dispatch = useDispatch<AppDispatch>();
 
-  const companiesList = companiesData.companies.map((company) => ({
-    label: company.name,
-    value: company.id,
-  }));
-
-  if (purchaseId!) {
-    const purchase = purchasesData.purchases.find((p) => p.id === purchaseId);
-    if (purchase) {
-      setPurchaseDetails(purchase);
-    }
-  }
+  const [purchaseDetails, setPurchaseDetails] = React.useState<
+    Purchase | undefined
+  >(purchasesData.purchases.find((p) => p.id === purchaseId));
+  const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [companiesList, setCompaniesList] = React.useState<
+    { label: string; value: number }[]
+  >(
+    companiesData.companies.map((company) => ({
+      label: company.name,
+      value: company.id,
+    }))
+  );
 
   const goBackHandler = () => {
     setPurchaseDetails(undefined);
@@ -87,7 +82,9 @@ const PurchaseForm = () => {
       >
         <Appbar.Header mode="small" elevated>
           <Appbar.BackAction onPress={goBackHandler} />
-          <Appbar.Content title="Add Purchase" />
+          <Appbar.Content
+            title={`${formType === "add" ? "Add" : "Edit"} Purchase`}
+          />
           <Appbar.Action icon="content-save" onPress={savePurchaseHandler} />
         </Appbar.Header>
         <View style={styles.formContainer}>
