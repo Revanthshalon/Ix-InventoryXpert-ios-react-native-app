@@ -2,7 +2,6 @@ import {
   Keyboard,
   NativeSyntheticEvent,
   StyleSheet,
-  Text,
   TextInputChangeEventData,
   TouchableWithoutFeedback,
   View,
@@ -15,11 +14,21 @@ import DbContext from "../../context/DbContext";
 import { Purchase } from "../../db/purchaseSchema";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { Appbar, FAB, TextInput, useTheme } from "react-native-paper";
+import {
+  Appbar,
+  Button,
+  Dialog,
+  FAB,
+  Portal,
+  Text,
+  TextInput,
+  useTheme,
+} from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
 import { DatePickerInput } from "react-native-paper-dates";
 import {
   addNewPurchase,
+  deletePurchaseById,
   updatePurchaseById,
 } from "../../redux/purchase/PurchaseSlice";
 import { fetchAllCompanies } from "../../redux/company/CompanySlice";
@@ -49,6 +58,7 @@ const PurchaseForm = () => {
     Purchase | undefined
   >(purchasesData.purchases.find((p) => p.id === purchaseId));
   const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
+  const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [purchaseAmount, setPurchaseAmount] = React.useState<
     string | undefined
@@ -96,6 +106,19 @@ const PurchaseForm = () => {
     }
   };
 
+  const deleteHandler = () => {
+    dispatch(deletePurchaseById({ db: db!, id: purchaseDetails!.id }));
+    dispatch(
+      fetchRelatedPurchases({ db: db!, companyId: purchaseDetails!.companyId! })
+    );
+    closeDeleteAlert();
+    JournalNav.goBack();
+  };
+
+  const closeDeleteAlert = () => {
+    setShowDeleteAlert(false);
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View
@@ -113,10 +136,28 @@ const PurchaseForm = () => {
             <Appbar.Action
               icon="trash-can"
               color={useTheme().colors.error}
-              onPress={() => {}}
+              onPress={() => {
+                setShowDeleteAlert(true);
+              }}
             />
           )}
         </Appbar.Header>
+        <Portal>
+          <Dialog visible={showDeleteAlert}>
+            <Dialog.Title>Warning</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium">
+                Are you sure you want to delete purchase details?
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={closeDeleteAlert}>Cancel</Button>
+              <Button mode="contained" onPress={deleteHandler}>
+                Delete
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
         <View style={styles.formContainer}>
           <DropDown
             mode="outlined"
