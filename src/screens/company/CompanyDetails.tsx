@@ -17,6 +17,7 @@ import CompanyInfoCard from "./components/CompanyInfoCard";
 import CustomCardWithTable from "../components/CustomCardWithTable";
 import { fetchRelatedPurchases } from "../../redux/company/RelatedPurchasesSlice";
 import DbContext from "../../context/DbContext";
+import { fetchRelatedPayments } from "../../redux/company/RelatedPaymentSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -38,6 +39,9 @@ const CompanyDetails = () => {
   const companyRelatedPurchases = useSelector(
     (state: RootState) => state.relatedPurchases.relatedPurchases
   );
+  const companyRelatedPayments = useSelector(
+    (state: RootState) => state.relatedPayments.relatedPayments
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
@@ -55,12 +59,11 @@ const CompanyDetails = () => {
 
   React.useEffect(() => {
     dispatch(fetchRelatedPurchases({ db: db!, companyId }));
+    dispatch(fetchRelatedPayments({ db: db!, companyId }));
   }, []);
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: useTheme().colors.background }}
-    >
+    <View style={{ flex: 1, backgroundColor: useTheme().colors.background }}>
       <Appbar.Header mode="small" elevated>
         <Appbar.BackAction onPress={() => JournalNav.goBack()} />
         <Appbar.Content title="Company Details" />
@@ -89,22 +92,45 @@ const CompanyDetails = () => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-      <CompanyInfoCard companyDetails={companyDetails!} />
-      <ScrollView horizontal>
-        <CustomCardWithTable
-          cardTitle="Related Purchases"
-          data={companyRelatedPurchases}
-          dataMapping={[
-            { column: "Purchase Date", key: "date", customStyling: "date" },
-            {
-              column: "Purchase Amount",
-              key: "amount",
-              customStyling: "currency",
-            },
-          ]}
-        />
+      <ScrollView
+        style={[{ marginBottom: 40 }]}
+        showsVerticalScrollIndicator={false}
+      >
+        <CompanyInfoCard companyDetails={companyDetails!} />
+        <ScrollView horizontal>
+          <CustomCardWithTable
+            cardTitle="Related Purchases"
+            data={companyRelatedPurchases}
+            dataMapping={[
+              { column: "Date", key: "date", customStyling: "date" },
+              {
+                column: "Amount",
+                key: "amount",
+                customStyling: "currency",
+              },
+            ]}
+          />
+        </ScrollView>
+        <ScrollView horizontal>
+          <CustomCardWithTable
+            cardTitle="Related Payments"
+            data={companyRelatedPayments}
+            dataMapping={[
+              { column: "Date", key: "date", customStyling: "date" },
+              {
+                column: "Amount",
+                key: "amount",
+                customStyling: "currency",
+              },
+              {
+                column: "Status",
+                key: "paymentStatus",
+              },
+            ]}
+          />
+        </ScrollView>
       </ScrollView>
-    </ScrollView>
+    </View>
   );
 };
 

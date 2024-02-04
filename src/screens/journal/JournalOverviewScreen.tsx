@@ -60,20 +60,6 @@ const JournalOverviewScreen = () => {
       >
         <ScrollView horizontal>
           <CustomCardWithTable
-            cardTitle="Upcoming Payments"
-            cardSubtitle="this week"
-            setDefaultSortColumn="date"
-            setDefaultSortDirection="ascending"
-            dataMapping={[
-              { column: "Company", key: "name" },
-              { column: "Due Date", key: "date", customStyling: "date" },
-              { column: "Amount", key: "amount", customStyling: "currency" },
-            ]}
-            data={journalUpcomingPayments!}
-          />
-        </ScrollView>
-        <ScrollView horizontal>
-          <CustomCardWithTable
             cardTitle="Companies"
             setDefaultSortColumn="date"
             setDefaultSortDirection="ascending"
@@ -89,6 +75,20 @@ const JournalOverviewScreen = () => {
             rowOnPress={(id: number) => {
               JournalNav.push("CompanyDetails", { companyId: id });
             }}
+          />
+        </ScrollView>
+        <ScrollView horizontal>
+          <CustomCardWithTable
+            cardTitle="Upcoming Payments"
+            cardSubtitle="this week"
+            setDefaultSortColumn="date"
+            setDefaultSortDirection="ascending"
+            dataMapping={[
+              { column: "Company", key: "name" },
+              { column: "Due Date", key: "date", customStyling: "date" },
+              { column: "Amount", key: "amount", customStyling: "currency" },
+            ]}
+            data={journalUpcomingPayments!}
           />
         </ScrollView>
       </ScrollView>

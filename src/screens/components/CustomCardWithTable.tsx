@@ -97,8 +97,13 @@ const CustomCardWithTable = ({
             );
           })}
         </DataTable.Header>
+        {sortedData.length === 0 && (
+          <DataTable.Row>
+            <DataTable.Cell>No Data Available</DataTable.Cell>
+          </DataTable.Row>
+        )}
         <FlatList
-          style={{ height: 200, marginVertical: 5 }}
+          style={{ maxHeight: 200, marginVertical: 5 }}
           data={sortedData}
           renderItem={({ item }) => {
             return (
