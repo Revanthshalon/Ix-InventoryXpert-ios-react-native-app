@@ -200,6 +200,7 @@ const PaymentForm = () => {
           icon="content-save"
           style={[styles.fab]}
           onPress={savePaymentHandler}
+          loading={loading}
         />
       </View>
     </TouchableWithoutFeedback>

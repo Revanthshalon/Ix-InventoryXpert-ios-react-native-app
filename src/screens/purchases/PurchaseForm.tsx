@@ -178,6 +178,7 @@ const PurchaseForm = () => {
           icon="content-save"
           style={[styles.fab]}
           onPress={savePurchaseHandler}
+          loading={loading}
         />
       </View>
     </TouchableWithoutFeedback>

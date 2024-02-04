@@ -10,7 +10,7 @@ import React, { useContext } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { JournalStackParamList } from "../../routes/journal/JournalStack";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { Appbar, TextInput, useTheme } from "react-native-paper";
+import { Appbar, FAB, TextInput, useTheme } from "react-native-paper";
 import { Company, getCompanyById, insertCompany } from "../../db/companySchema";
 import DbContext from "../../context/DbContext";
 import { useDispatch, useSelector } from "react-redux";
@@ -72,11 +72,6 @@ const CompanyForm = () => {
         <Appbar.Header mode="small" elevated>
           <Appbar.BackAction onPress={goBackHandler} />
           <Appbar.Content title="Company Form" />
-          <Appbar.Action
-            icon="content-save"
-            onPress={saveCompanyHandler}
-            loading={loading}
-          />
         </Appbar.Header>
         <View style={[styles.formContainer]}>
           <TextInput
@@ -159,6 +154,12 @@ const CompanyForm = () => {
             }}
           />
         </View>
+        <FAB
+          icon="content-save"
+          style={[styles.fab]}
+          onPress={saveCompanyHandler}
+          loading={loading}
+        />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -183,5 +184,11 @@ const styles = StyleSheet.create({
   },
   button: {
     flexGrow: 1,
+  },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 20,
+    bottom: 20,
   },
 });
