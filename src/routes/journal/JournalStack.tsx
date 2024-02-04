@@ -4,12 +4,14 @@ import JournalOverviewScreen from "../../screens/journal/JournalOverviewScreen";
 import CompanyForm from "../../screens/company/CompanyForm";
 import PaymentForm from "../../screens/payments/PaymentForm";
 import PurchaseForm from "../../screens/purchases/PurchaseForm";
+import CompanyDetails from "../../screens/company/CompanyDetails";
 
 export type JournalStackParamList = {
   Overview: undefined;
   CompanyForm: { formType: "add" } | { formType: "edit"; companyId: number };
   PaymentForm: { formType: "add" } | { formType: "edit"; paymentId: number };
   PurchaseForm: { formType: "add" } | { formType: "edit"; purchaseId: number };
+  CompanyDetails: { companyId: number };
 };
 
 const JournalStack = () => {
@@ -23,6 +25,7 @@ const JournalStack = () => {
       <Stack.Screen name="CompanyForm" component={CompanyForm} />
       <Stack.Screen name="PaymentForm" component={PaymentForm} />
       <Stack.Screen name="PurchaseForm" component={PurchaseForm} />
+      <Stack.Screen name="CompanyDetails" component={CompanyDetails} />
     </Stack.Navigator>
   );
 };

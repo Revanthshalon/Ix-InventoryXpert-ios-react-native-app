@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
-import { Payment, getUpcomingPayments } from "../../db/paymentSchema";
-import { Company } from "../../db/companySchema";
+import { getUpcomingPayments } from "../../db/paymentSchema";
 
 const initialState = {
   upcomingPayments: [] as {
