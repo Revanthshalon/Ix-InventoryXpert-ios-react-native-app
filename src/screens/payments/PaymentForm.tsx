@@ -9,7 +9,10 @@ import {
 import React, { useContext } from "react";
 import {
   Appbar,
+  Button,
+  Dialog,
   FAB,
+  Portal,
   Switch,
   Text,
   TextInput,
@@ -26,6 +29,7 @@ import DropDown from "react-native-paper-dropdown";
 import { DatePickerInput } from "react-native-paper-dates";
 import {
   addNewPayment,
+  deletePaymentById,
   updatePaymentById,
 } from "../../redux/payment/paymentSlice";
 import { fetchUpcomingPayments } from "../../redux/journal/JournalSlice";
@@ -57,6 +61,7 @@ const PaymentForm = () => {
   >(paymentsData.payments.find((p) => p.id === paymentId));
   console.log(paymentDetails);
   const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
+  const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [paymentAmount, setPaymentAmount] = React.useState<string | undefined>(
     paymentDetails?.amount?.toString()
@@ -105,6 +110,21 @@ const PaymentForm = () => {
     }
   };
 
+  const deleteHandler = () => {
+    dispatch(deletePaymentById({ db: db!, id: paymentDetails!.id }));
+    dispatch(
+      fetchRelatedPayments({ db: db!, companyId: paymentDetails!.companyId! })
+    );
+    dispatch(fetchUpcomingPayments(db!));
+    dispatch(fetchAllCompanies(db!));
+    closeDeleteAlert();
+    JournalNav.goBack();
+  };
+
+  const closeDeleteAlert = () => {
+    setShowDeleteAlert(false);
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View
@@ -122,11 +142,29 @@ const PaymentForm = () => {
             <Appbar.Action
               icon="trash-can"
               color={useTheme().colors.error}
-              onPress={() => {}}
+              onPress={() => {
+                setShowDeleteAlert(true);
+              }}
               loading={loading}
             />
           )}
         </Appbar.Header>
+        <Portal>
+          <Dialog visible={showDeleteAlert}>
+            <Dialog.Title>Warning</Dialog.Title>
+            <Dialog.Content>
+              <Text variant="bodyMedium">
+                Are you sure you want to delete payment details?
+              </Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={closeDeleteAlert}>Cancel</Button>
+              <Button mode="contained" onPress={deleteHandler}>
+                Delete
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
         <View style={[styles.formContainer]}>
           <DropDown
             mode="outlined"

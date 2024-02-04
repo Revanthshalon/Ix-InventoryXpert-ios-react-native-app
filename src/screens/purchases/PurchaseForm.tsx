@@ -111,6 +111,7 @@ const PurchaseForm = () => {
     dispatch(
       fetchRelatedPurchases({ db: db!, companyId: purchaseDetails!.companyId! })
     );
+    dispatch(fetchAllCompanies(db!));
     closeDeleteAlert();
     JournalNav.goBack();
   };
