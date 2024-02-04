@@ -4,6 +4,7 @@ import paymentReducer from "./payment/paymentSlice";
 import purchaseReducer from "./purchase/PurchaseSlice";
 import journalReducer from "./journal/JournalSlice";
 import relatedPurchasesReducer from "./company/RelatedPurchasesSlice";
+import relatedPaymentsReducer from "./company/RelatedPaymentSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     purchase: purchaseReducer,
     journal: journalReducer,
     relatedPurchases: relatedPurchasesReducer,
+    relatedPayments: relatedPaymentsReducer,
   },
 });
 
