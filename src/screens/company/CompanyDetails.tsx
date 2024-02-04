@@ -1,10 +1,10 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack/lib/typescript/src/types";
 import { JournalStackParamList } from "../../routes/journal/JournalStack";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 import {
   Appbar,
   Button,
@@ -14,6 +14,9 @@ import {
   useTheme,
 } from "react-native-paper";
 import CompanyInfoCard from "./components/CompanyInfoCard";
+import CustomCardWithTable from "../components/CustomCardWithTable";
+import { fetchRelatedPurchases } from "../../redux/company/RelatedPurchasesSlice";
+import DbContext from "../../context/DbContext";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -22,6 +25,8 @@ type JournalNavigationProp = NativeStackNavigationProp<
 type JournalRouteProp = RouteProp<JournalStackParamList, "CompanyDetails">;
 
 const CompanyDetails = () => {
+  const db = useContext(DbContext);
+
   const JournalNav = useNavigation<JournalNavigationProp>();
   const JournalRoute = useRoute<JournalRouteProp>();
 
@@ -29,6 +34,11 @@ const CompanyDetails = () => {
   const companyDetails = useSelector((state: RootState) =>
     state.company.companies.find((c) => c.id === companyId)
   );
+
+  const companyRelatedPurchases = useSelector(
+    (state: RootState) => state.relatedPurchases.relatedPurchases
+  );
+  const dispatch = useDispatch<AppDispatch>();
 
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
 
@@ -42,6 +52,10 @@ const CompanyDetails = () => {
   const closeDeleteAlert = () => {
     setShowDeleteAlert(false);
   };
+
+  React.useEffect(() => {
+    dispatch(fetchRelatedPurchases({ db: db!, companyId }));
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: useTheme().colors.background }}>
@@ -74,6 +88,18 @@ const CompanyDetails = () => {
         </Dialog>
       </Portal>
       <CompanyInfoCard companyDetails={companyDetails!} />
+      <CustomCardWithTable
+        cardTitle="Related Purchases"
+        data={companyRelatedPurchases}
+        dataMapping={[
+          { column: "Purchase Date", key: "date", customStyling: "date" },
+          {
+            column: "Purchase Amount",
+            key: "amount",
+            customStyling: "currency",
+          },
+        ]}
+      />
     </View>
   );
 };
