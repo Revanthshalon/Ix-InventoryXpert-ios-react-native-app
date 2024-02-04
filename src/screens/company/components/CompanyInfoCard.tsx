@@ -24,6 +24,19 @@ const CompanyInfoCard = ({ companyDetails }: CompanyInfoProps) => {
       companyId: companyDetails.id,
     });
   };
+
+  const emailToCompany = () => {
+    console.log("Email to company");
+  };
+
+  const callCompany = () => {
+    console.log("Call to company");
+  };
+
+  const chatWithCompany = () => {
+    console.log("Chat with company");
+  };
+
   return (
     <Surface elevation={3} style={[styles.container]}>
       <View style={[styles.bodyContainer]}>
@@ -49,13 +62,13 @@ const CompanyInfoCard = ({ companyDetails }: CompanyInfoProps) => {
           </View>
           <View style={[styles.actionContainer]}>
             {companyDetails.email && (
-              <IconButton icon="email" onPress={() => {}} />
+              <IconButton icon="email" onPress={emailToCompany} />
             )}
             {companyDetails.phone && (
-              <IconButton icon="phone" onPress={() => {}} />
+              <IconButton icon="phone" onPress={callCompany} />
             )}
             {companyDetails.phone && (
-              <IconButton icon="chat" onPress={() => {}} />
+              <IconButton icon="chat" onPress={chatWithCompany} />
             )}
           </View>
         </View>
