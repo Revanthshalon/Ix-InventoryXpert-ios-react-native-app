@@ -129,9 +129,16 @@ const PurchaseForm = () => {
               mode="outlined"
               locale="en-GB"
               label="Payment Date"
-              value={purchaseDetails?.date}
+              value={
+                purchaseDetails?.date!
+                  ? new Date(purchaseDetails?.date!)
+                  : undefined
+              }
               onChange={(d) => {
-                setPurchaseDetails({ ...purchaseDetails!, date: d! });
+                setPurchaseDetails({
+                  ...purchaseDetails!,
+                  date: d!.toISOString(),
+                });
               }}
               inputMode="start"
             />

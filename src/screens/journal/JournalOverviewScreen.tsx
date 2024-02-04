@@ -28,8 +28,6 @@ const JournalOverviewScreen = () => {
 
   // Action Button Control
   const [open, setOpen] = React.useState(false);
-  const [enrichedUpcomingPayments, setEnrichedUpcomingPayments] =
-    React.useState<any>([]);
 
   React.useEffect(() => {
     dispatch(fetchAllCompanies(db!));
@@ -41,18 +39,12 @@ const JournalOverviewScreen = () => {
   const journalUpcomingPayments = useSelector(
     (state: RootState) => state.journal.upcomingPayments
   );
-
-  // setEnrichedUpcomingPayments(
-  //   journalUpcomingPayments?.map((r) => {
-  //     return {
-  //       name: r.companyId,
-  //       date: r.date,
-  //       amount: r.amount,
-  //     };
-  //   })
-  // );
+  const companiesData = useSelector(
+    (state: RootState) => state.company.companies
+  );
 
   console.log(journalUpcomingPayments);
+  console.log(companiesData);
 
   return (
     <View
@@ -62,17 +54,38 @@ const JournalOverviewScreen = () => {
       ]}
     >
       <CustomHeader />
-      <ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1, marginBottom: 40 }}
+      >
         <ScrollView horizontal>
           <CustomCardWithTable
             cardTitle="Upcoming Payments"
             cardSubtitle="this week"
+            setDefaultSortColumn="date"
+            setDefaultSortDirection="ascending"
             dataMapping={[
               { column: "Company", key: "name" },
-              { column: "Due Date", key: "date" },
+              { column: "Due Date", key: "date", customStyling: "date" },
               { column: "Amount", key: "amount", customStyling: "currency" },
             ]}
             data={journalUpcomingPayments!}
+          />
+        </ScrollView>
+        <ScrollView horizontal>
+          <CustomCardWithTable
+            cardTitle="Companies"
+            setDefaultSortColumn="date"
+            setDefaultSortDirection="ascending"
+            dataMapping={[
+              { column: "Company", key: "name" },
+              {
+                column: "Pending Amount",
+                key: "existingBalance",
+                customStyling: "currency",
+              },
+            ]}
+            data={companiesData!}
           />
         </ScrollView>
       </ScrollView>

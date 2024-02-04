@@ -1,6 +1,6 @@
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
-import { companies } from "./schema";
-import { eq } from "drizzle-orm";
+import { companies, payments, purchases } from "./schema";
+import { eq, sql, sum } from "drizzle-orm";
 
 /**
  * Represents a company entry in the database.
@@ -30,7 +30,36 @@ export const getAllCompanies = async (
   db: ExpoSQLiteDatabase<Record<string, never>>
 ) => {
   const results = await db.select().from(companies);
-  return results;
+  const totalPaymentsByCompany = await db
+    .select({
+      companyId: payments.companyId,
+      totalPayments: sum(payments.amount),
+    })
+    .from(payments)
+    .groupBy(payments.companyId)
+    .having(eq(payments.paymentStatus, "pending"));
+
+  const test = await db
+    .select({
+      id: companies.id,
+      name: companies.name,
+      gstNo: companies.gstNo,
+      address: companies.address,
+      phone: companies.phone,
+      email: companies.email,
+      existingBalance: sql<number>`(${
+        companies.existingBalance
+      } + COALESCE(${sum(purchases.amount)},0))- COALESCE(${sum(
+        payments.amount
+      )},0)`,
+    })
+    .from(companies)
+    .leftJoin(payments, eq(payments.companyId, companies.id))
+    .leftJoin(purchases, eq(purchases.companyId, companies.id))
+    .groupBy(companies.id)
+    .having(eq(payments.paymentStatus, "pending"));
+
+  return test;
 };
 
 /**

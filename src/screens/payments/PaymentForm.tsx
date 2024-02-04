@@ -18,6 +18,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 import DropDown from "react-native-paper-dropdown";
 import { DatePickerInput } from "react-native-paper-dates";
 import { addNewPayment } from "../../redux/payment/paymentSlice";
+import { fetchUpcomingPayments } from "../../redux/journal/JournalSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -70,6 +71,7 @@ const PaymentForm = () => {
       paymentsData.status === "loading" ? setLoading(true) : setLoading(false);
       goBackHandler();
       paymentsData.status = "idle";
+      dispatch(fetchUpcomingPayments(db!));
     }
   };
 
@@ -132,9 +134,16 @@ const PaymentForm = () => {
               mode="outlined"
               locale="en-GB"
               label="Payment Date"
-              value={paymentDetails?.date}
+              value={
+                paymentDetails?.date!
+                  ? new Date(paymentDetails?.date!)
+                  : undefined
+              }
               onChange={(d) => {
-                setPaymentDetails({ ...paymentDetails!, date: d! });
+                setPaymentDetails({
+                  ...paymentDetails!,
+                  date: d!.toISOString(),
+                });
               }}
               inputMode="start"
             />

@@ -6,6 +6,7 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import useOnboarding from "../hooks/useOnboarding";
 import * as SplashScreen from "expo-splash-screen";
 import RootStack from "../routes/RootStack";
+import LoadingScreen from "../screens/loading/LoadingScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,6 +41,10 @@ const RootLayout = () => {
     };
     prepareApp();
   }, [loadingStatus, success, error]);
+
+  if (!success && error !== undefined) {
+    return <LoadingScreen />;
+  }
 
   if (!appReady) {
     return null;

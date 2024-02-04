@@ -138,7 +138,7 @@ export const getUpcomingPayments = async (
     .where(
       and(
         eq(payments.paymentStatus, "pending"),
-        gte(payments.date, new Date().toString())
+        gte(payments.date, new Date().toISOString())
       )
     );
   return results;

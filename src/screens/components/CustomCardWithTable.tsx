@@ -104,7 +104,7 @@ const CustomCardWithTable = ({
             return (
               <DataTable.Row
                 onPress={() => {
-                  rowOnPress!(item?.id);
+                  rowOnPress ? rowOnPress(item?.id) : null;
                 }}
               >
                 {dataMapping.map((mapping, index) => {
@@ -114,6 +114,15 @@ const CustomCardWithTable = ({
                         ? parseFloat(item[mapping.key]).toLocaleString(
                             "en-IN",
                             { style: mapping.customStyling, currency: "INR" }
+                          )
+                        : mapping.customStyling === "date"
+                        ? new Date(item[mapping.key]).toLocaleDateString(
+                            "en-GB",
+                            {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                            }
                           )
                         : item[mapping.key]}
                     </DataTable.Cell>
