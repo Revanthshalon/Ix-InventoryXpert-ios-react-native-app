@@ -89,6 +89,12 @@ const JournalOverviewScreen = () => {
               { column: "Amount", key: "amount", customStyling: "currency" },
             ]}
             data={journalUpcomingPayments!}
+            rowOnPress={(id: number) => {
+              JournalNav.push("PaymentForm", {
+                formType: "edit",
+                paymentId: id,
+              });
+            }}
           />
         </ScrollView>
       </ScrollView>

@@ -4,6 +4,7 @@ import { getUpcomingPayments } from "../../db/paymentSchema";
 
 const initialState = {
   upcomingPayments: [] as {
+    id: number;
     name: string | null;
     amount: number;
     date: string;

@@ -129,6 +129,7 @@ export const getUpcomingPayments = async (
 ) => {
   const results = await db
     .select({
+      id: payments.id,
       name: companies.name,
       amount: payments.amount,
       date: payments.date,

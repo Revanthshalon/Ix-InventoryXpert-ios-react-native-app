@@ -7,7 +7,14 @@ import {
   View,
 } from "react-native";
 import React, { useContext } from "react";
-import { Appbar, Switch, Text, TextInput, useTheme } from "react-native-paper";
+import {
+  Appbar,
+  FAB,
+  Switch,
+  Text,
+  TextInput,
+  useTheme,
+} from "react-native-paper";
 import { JournalStackParamList } from "../../routes/journal/JournalStack";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -44,6 +51,7 @@ const PaymentForm = () => {
   const [paymentDetails, setPaymentDetails] = React.useState<
     Payment | undefined
   >(paymentsData.payments.find((p) => p.id === paymentId));
+  console.log(paymentDetails);
   const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [companiesList, setCompaniesList] = React.useState<
@@ -87,11 +95,14 @@ const PaymentForm = () => {
           <Appbar.Content
             title={`${formType === "add" ? "Add" : "Edit"} Payment`}
           />
-          <Appbar.Action
-            icon="content-save"
-            onPress={savePaymentHandler}
-            loading={loading}
-          />
+          {formType === "edit" && (
+            <Appbar.Action
+              icon="trash-can"
+              color={useTheme().colors.error}
+              onPress={() => {}}
+              loading={loading}
+            />
+          )}
         </Appbar.Header>
         <View style={[styles.formContainer]}>
           <DropDown
@@ -185,6 +196,11 @@ const PaymentForm = () => {
             />
           </View>
         </View>
+        <FAB
+          icon="content-save"
+          style={[styles.fab]}
+          onPress={savePaymentHandler}
+        />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -209,5 +225,11 @@ const styles = StyleSheet.create({
   },
   button: {
     flexGrow: 1,
+  },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 20,
+    bottom: 20,
   },
 });

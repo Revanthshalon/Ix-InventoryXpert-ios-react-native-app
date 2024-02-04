@@ -15,7 +15,7 @@ import DbContext from "../../context/DbContext";
 import { Purchase } from "../../db/purchaseSchema";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { Appbar, TextInput, useTheme } from "react-native-paper";
+import { Appbar, FAB, TextInput, useTheme } from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
 import { DatePickerInput } from "react-native-paper-dates";
 import { addNewPurchase } from "../../redux/purchase/PurchaseSlice";
@@ -85,7 +85,13 @@ const PurchaseForm = () => {
           <Appbar.Content
             title={`${formType === "add" ? "Add" : "Edit"} Purchase`}
           />
-          <Appbar.Action icon="content-save" onPress={savePurchaseHandler} />
+          {formType === "edit" && (
+            <Appbar.Action
+              icon="trash-can"
+              color={useTheme().colors.error}
+              onPress={() => {}}
+            />
+          )}
         </Appbar.Header>
         <View style={styles.formContainer}>
           <DropDown
@@ -168,6 +174,11 @@ const PurchaseForm = () => {
             }}
           />
         </View>
+        <FAB
+          icon="content-save"
+          style={[styles.fab]}
+          onPress={savePurchaseHandler}
+        />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -192,5 +203,11 @@ const styles = StyleSheet.create({
   },
   button: {
     flexGrow: 1,
+  },
+  fab: {
+    position: "absolute",
+    margin: 16,
+    right: 20,
+    bottom: 20,
   },
 });
