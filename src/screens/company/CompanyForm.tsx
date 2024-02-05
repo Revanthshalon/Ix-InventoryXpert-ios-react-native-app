@@ -66,6 +66,7 @@ const CompanyForm = () => {
           company: companyDetails!,
         })
       );
+      dispatch(fetchCompanyById({ db: db!, id: companyId! }));
       dispatch(fetchAllCompanies(db!));
       goBackHandler();
     }

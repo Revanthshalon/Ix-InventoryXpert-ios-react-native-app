@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Linking } from "react-native";
 import React, { useContext } from "react";
 import { Company } from "../../../db/companySchema";
 import { IconButton, Surface, Text } from "react-native-paper";
@@ -34,15 +34,17 @@ const CompanyInfoCard = ({ companyDetails }: CompanyInfoProps) => {
   };
 
   const emailToCompany = () => {
-    console.log("Email to company");
+    Linking.openURL(`mailto:${companyDetails.email}`);
   };
 
   const callCompany = () => {
-    console.log("Call to company");
+    Linking.openURL(`tel:${companyDetails.phone}`);
   };
 
   const chatWithCompany = () => {
-    console.log("Chat with company");
+    Linking.openURL(
+      `https://api.whatsapp.com/send?phone=${companyDetails.phone}`
+    );
   };
 
   return (
@@ -52,13 +54,13 @@ const CompanyInfoCard = ({ companyDetails }: CompanyInfoProps) => {
           {companyDetails?.name}
         </Text>
         {companyDetails?.phone && (
-          <Text variant="titleMedium">Contact:{companyDetails.phone}</Text>
+          <Text variant="titleMedium">Contact: {companyDetails.phone}</Text>
         )}
         {companyDetails?.gstNo && (
-          <Text variant="titleMedium">GST No.{companyDetails.gstNo}</Text>
+          <Text variant="titleMedium">GST No: {companyDetails.gstNo}</Text>
         )}
         <Text variant="titleMedium">
-          Pending Balance:
+          Pending Balance:{" "}
           {companyDetails?.existingBalance.toLocaleString("en-In", {
             style: "currency",
             currency: "INR",
