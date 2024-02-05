@@ -97,6 +97,7 @@ const JournalOverviewScreen = () => {
             }}
           />
         </ScrollView>
+        {/**TODO: Add Due Payments */}
       </ScrollView>
       <FAB.Group
         style={{ position: "absolute" }}
