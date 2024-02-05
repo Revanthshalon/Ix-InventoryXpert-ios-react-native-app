@@ -11,11 +11,16 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { JournalStackParamList } from "../../routes/journal/JournalStack";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { Appbar, FAB, TextInput, useTheme } from "react-native-paper";
-import { Company, getCompanyById, insertCompany } from "../../db/companySchema";
+import { Company } from "../../db/companySchema";
 import DbContext from "../../context/DbContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { addNewCompany } from "../../redux/company/CompanySlice";
+import {
+  addNewCompany,
+  fetchAllCompanies,
+  updateCompanyById,
+} from "../../redux/company/CompanySlice";
+import { fetchCompanyById } from "../../redux/company/CompanyDetailsSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -33,15 +38,19 @@ const CompanyForm = () => {
   const companyId =
     formType === "edit" ? JournalRoute.params.companyId : undefined;
 
-  console.log(formType, companyId);
-
+  const companyInfo = useSelector(
+    (state: RootState) => state.companyDetails.company
+  );
   const companiesData = useSelector((state: RootState) => state.company);
   const dispatch = useDispatch<AppDispatch>();
 
   const [companyDetails, setCompanyDetails] = React.useState<
     Company | undefined
-  >(companiesData.companies.find((c) => c.id === companyId));
+  >(formType === "edit" ? companyInfo : undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [amount, setAmount] = React.useState<string>(
+    companyInfo.existingBalance?.toString()!
+  );
 
   const goBackHandler = () => {
     setCompanyDetails(undefined);
@@ -50,13 +59,20 @@ const CompanyForm = () => {
 
   const saveCompanyHandler = async () => {
     if (formType === "edit") {
+      dispatch(
+        updateCompanyById({
+          db: db!,
+          id: companyDetails?.id!,
+          company: companyDetails!,
+        })
+      );
+      dispatch(fetchAllCompanies(db!));
+      goBackHandler();
     }
     if (formType === "add") {
       dispatch(addNewCompany({ db: db!, company: companyDetails! }));
       companiesData.status === "loading" ? setLoading(true) : setLoading(false);
       goBackHandler();
-      console.log(companiesData.companies);
-      console.log(companiesData.status);
       companiesData.status = "idle";
     }
   };
@@ -141,15 +157,14 @@ const CompanyForm = () => {
           <TextInput
             mode="outlined"
             keyboardType="numeric"
-            label="Existing Balance"
-            placeholder="Enter Existing Balance"
-            value={companyDetails?.existingBalance?.toString()}
-            onBlur={(e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+            label="Initial Balance"
+            placeholder="Enter Initial Balance"
+            value={amount}
+            onChangeText={setAmount}
+            onBlur={() => {
               setCompanyDetails({
                 ...companyDetails!,
-                existingBalance: parseFloat(
-                  e.nativeEvent.text === "" ? "0" : e.nativeEvent.text
-                ),
+                existingBalance: parseFloat(amount),
               });
             }}
           />

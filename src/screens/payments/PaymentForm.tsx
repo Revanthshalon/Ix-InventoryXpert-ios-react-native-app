@@ -58,7 +58,11 @@ const PaymentForm = () => {
 
   const [paymentDetails, setPaymentDetails] = React.useState<
     Payment | undefined
-  >(paymentsData.payments.find((p) => p.id === paymentId));
+  >(
+    formType === "edit"
+      ? paymentsData.payments.find((p) => p.id === paymentId)
+      : undefined
+  );
   console.log(paymentDetails);
   const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);

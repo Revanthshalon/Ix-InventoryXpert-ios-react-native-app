@@ -18,6 +18,12 @@ import CustomCardWithTable from "../components/CustomCardWithTable";
 import { fetchRelatedPurchases } from "../../redux/company/RelatedPurchasesSlice";
 import DbContext from "../../context/DbContext";
 import { fetchRelatedPayments } from "../../redux/company/RelatedPaymentSlice";
+import {
+  deleteCompanyById,
+  fetchAllCompanies,
+} from "../../redux/company/CompanySlice";
+import { fetchUpcomingPayments } from "../../redux/journal/JournalSlice";
+import { fetchCompanyById } from "../../redux/company/CompanyDetailsSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -49,6 +55,9 @@ const CompanyDetails = () => {
   const deleteHandler = () => {
     // Delete the company and related purchase and payment details
     console.log("Delete the company and related purchase and payment details");
+    dispatch(deleteCompanyById({ db: db!, id: companyId! }));
+    dispatch(fetchAllCompanies(db!));
+    dispatch(fetchUpcomingPayments(db!));
     closeDeleteAlert();
     JournalNav.goBack();
   };
@@ -60,6 +69,7 @@ const CompanyDetails = () => {
   React.useEffect(() => {
     dispatch(fetchRelatedPurchases({ db: db!, companyId }));
     dispatch(fetchRelatedPayments({ db: db!, companyId }));
+    dispatch(fetchCompanyById({ db: db!, id: companyId }));
   }, []);
 
   return (

@@ -56,7 +56,11 @@ const PurchaseForm = () => {
 
   const [purchaseDetails, setPurchaseDetails] = React.useState<
     Purchase | undefined
-  >(purchasesData.purchases.find((p) => p.id === purchaseId));
+  >(
+    formType === "edit"
+      ? purchasesData.purchases.find((p) => p.id === purchaseId)
+      : undefined
+  );
   const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);

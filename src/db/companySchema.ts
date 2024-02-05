@@ -1,7 +1,6 @@
 import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import { companies, payments, purchases } from "./schema";
 import { eq, sql, sum } from "drizzle-orm";
-import { unionAll } from "drizzle-orm/sqlite-core";
 
 /**
  * Represents a company entry in the database.

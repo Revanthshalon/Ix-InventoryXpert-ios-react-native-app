@@ -1,10 +1,14 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { Company } from "../../../db/companySchema";
 import { IconButton, Surface, Text } from "react-native-paper";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { JournalStackParamList } from "../../../routes/journal/JournalStack";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
+import { fetchCompanyById } from "../../../redux/company/CompanyDetailsSlice";
+import DbContext from "../../../context/DbContext";
 
 type CompanyInfoProps = {
   companyDetails: Company;
@@ -17,8 +21,12 @@ type JournalNavigationProp = NativeStackNavigationProp<
 
 const CompanyInfoCard = ({ companyDetails }: CompanyInfoProps) => {
   const JournalNav = useNavigation<JournalNavigationProp>();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const db = useContext(DbContext);
 
   const editCompanyDetails = () => {
+    dispatch(fetchCompanyById({ db: db!, id: companyDetails.id! }));
     JournalNav.push("CompanyForm", {
       formType: "edit",
       companyId: companyDetails.id,
@@ -41,17 +49,17 @@ const CompanyInfoCard = ({ companyDetails }: CompanyInfoProps) => {
     <Surface elevation={3} style={[styles.container]}>
       <View style={[styles.bodyContainer]}>
         <Text variant="headlineMedium" style={[styles.header]}>
-          {companyDetails.name}
+          {companyDetails?.name}
         </Text>
-        {companyDetails.phone && (
+        {companyDetails?.phone && (
           <Text variant="titleMedium">Contact:{companyDetails.phone}</Text>
         )}
-        {companyDetails.gstNo && (
+        {companyDetails?.gstNo && (
           <Text variant="titleMedium">GST No.{companyDetails.gstNo}</Text>
         )}
         <Text variant="titleMedium">
           Pending Balance:
-          {companyDetails.existingBalance.toLocaleString("en-In", {
+          {companyDetails?.existingBalance.toLocaleString("en-In", {
             style: "currency",
             currency: "INR",
           })}
@@ -61,13 +69,13 @@ const CompanyInfoCard = ({ companyDetails }: CompanyInfoProps) => {
             <IconButton icon="pencil" onPress={editCompanyDetails} />
           </View>
           <View style={[styles.actionContainer]}>
-            {companyDetails.email && (
+            {companyDetails?.email && (
               <IconButton icon="email" onPress={emailToCompany} />
             )}
-            {companyDetails.phone && (
+            {companyDetails?.phone && (
               <IconButton icon="phone" onPress={callCompany} />
             )}
-            {companyDetails.phone && (
+            {companyDetails?.phone && (
               <IconButton icon="chat" onPress={chatWithCompany} />
             )}
           </View>
