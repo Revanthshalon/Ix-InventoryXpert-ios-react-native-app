@@ -35,6 +35,7 @@ import {
 import { fetchUpcomingPayments } from "../../redux/journal/JournalSlice";
 import { fetchAllCompanies } from "../../redux/company/CompanySlice";
 import { fetchRelatedPayments } from "../../redux/company/RelatedPaymentSlice";
+import { fetchPendingPayments } from "../../redux/journal/PendingPaymentsSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -94,6 +95,7 @@ const PaymentForm = () => {
           payment: paymentDetails!,
         })
       );
+      dispatch(fetchPendingPayments(db!));
       dispatch(fetchUpcomingPayments(db!));
       dispatch(
         fetchRelatedPayments({ db: db!, companyId: paymentDetails!.companyId! })
@@ -111,6 +113,7 @@ const PaymentForm = () => {
       paymentsData.status = "idle";
       dispatch(fetchUpcomingPayments(db!));
       dispatch(fetchAllCompanies(db!));
+      dispatch(fetchPendingPayments(db!));
     }
   };
 

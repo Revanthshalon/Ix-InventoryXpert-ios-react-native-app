@@ -6,6 +6,7 @@ import journalReducer from "./journal/JournalSlice";
 import relatedPurchasesReducer from "./company/RelatedPurchasesSlice";
 import relatedPaymentsReducer from "./company/RelatedPaymentSlice";
 import companyDetailsReducer from "./company/CompanyDetailsSlice";
+import pendingPaymentsReducer from "./journal/PendingPaymentsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     relatedPurchases: relatedPurchasesReducer,
     relatedPayments: relatedPaymentsReducer,
     companyDetails: companyDetailsReducer,
+    pendingPayments: pendingPaymentsReducer,
   },
 });
 

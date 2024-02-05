@@ -13,6 +13,7 @@ import { fetchAllPurchases } from "../../redux/purchase/PurchaseSlice";
 import CustomHeader from "../components/CustomHeader";
 import CustomCardWithTable from "../components/CustomCardWithTable";
 import { fetchUpcomingPayments } from "../../redux/journal/JournalSlice";
+import { fetchPendingPayments } from "../../redux/journal/PendingPaymentsSlice";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
@@ -34,6 +35,7 @@ const JournalOverviewScreen = () => {
     dispatch(fetchAllPayments(db!));
     dispatch(fetchAllPurchases(db!));
     dispatch(fetchUpcomingPayments(db!));
+    dispatch(fetchPendingPayments(db!));
   }, []);
 
   const journalUpcomingPayments = useSelector(
@@ -44,6 +46,10 @@ const JournalOverviewScreen = () => {
   );
   const purchasesData = useSelector(
     (state: RootState) => state.purchase.purchases
+  );
+
+  const pendingPaymentsData = useSelector(
+    (state: RootState) => state.pendingPayments.pendingPayments
   );
 
   return (
@@ -89,6 +95,26 @@ const JournalOverviewScreen = () => {
               { column: "Amount", key: "amount", customStyling: "currency" },
             ]}
             data={journalUpcomingPayments!}
+            rowOnPress={(id: number) => {
+              JournalNav.push("PaymentForm", {
+                formType: "edit",
+                paymentId: id,
+              });
+            }}
+          />
+        </ScrollView>
+        <ScrollView horizontal>
+          <CustomCardWithTable
+            cardTitle="Pending Payments"
+            // cardSubtitle="this week"
+            setDefaultSortColumn="date"
+            setDefaultSortDirection="ascending"
+            dataMapping={[
+              { column: "Company", key: "name" },
+              { column: "Due Date", key: "date", customStyling: "date" },
+              { column: "Amount", key: "amount", customStyling: "currency" },
+            ]}
+            data={pendingPaymentsData!}
             rowOnPress={(id: number) => {
               JournalNav.push("PaymentForm", {
                 formType: "edit",
