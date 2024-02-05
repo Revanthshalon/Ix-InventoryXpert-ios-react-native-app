@@ -1,12 +1,12 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import JournalStack from "../journal/JournalStack";
-import { useTheme } from "react-native-paper";
-import OnboardingScreen from "../../screens/onboarding/OnboardingScreen";
+import { Icon, useTheme } from "react-native-paper";
+import Support from "../../screens/support/Support";
 
 export type AppDrawerParamList = {
   Journal: undefined;
-  Settings: undefined;
+  Support: undefined;
 };
 
 const AppDrawer = () => {
@@ -23,10 +23,35 @@ const AppDrawer = () => {
         },
         drawerActiveTintColor: useTheme().colors.primary,
         drawerInactiveTintColor: useTheme().colors.onBackground,
+        drawerHideStatusBarOnOpen: true,
       }}
     >
-      <Drawer.Screen name="Journal" component={JournalStack} />
-      <Drawer.Screen name="Settings" component={OnboardingScreen} />
+      <Drawer.Screen
+        name="Journal"
+        component={JournalStack}
+        options={{
+          drawerIcon: ({ size, color, focused }) => (
+            <Icon
+              source="notebook"
+              size={size}
+              color={focused ? useTheme().colors.primary : color}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Support"
+        component={Support}
+        options={{
+          drawerIcon: ({ size, color, focused }) => (
+            <Icon
+              source="account-tie-voice-outline"
+              size={size}
+              color={focused ? useTheme().colors.primary : color}
+            />
+          ),
+        }}
+      />
     </Drawer.Navigator>
   );
 };

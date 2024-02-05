@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useContext } from "react";
-import { FAB, Portal, useTheme } from "react-native-paper";
+import { Appbar, FAB, Portal, useTheme } from "react-native-paper";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { JournalStackParamList } from "../../routes/journal/JournalStack";
 import { useNavigation } from "@react-navigation/native";
@@ -14,16 +14,24 @@ import CustomHeader from "../components/CustomHeader";
 import CustomCardWithTable from "../components/CustomCardWithTable";
 import { fetchUpcomingPayments } from "../../redux/journal/JournalSlice";
 import { fetchPendingPayments } from "../../redux/journal/PendingPaymentsSlice";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { AppDrawerParamList } from "../../routes/app/AppDrawer";
 
 type JournalNavigationProp = NativeStackNavigationProp<
   JournalStackParamList,
   "Overview"
 >;
 
+type AppDrawerNavigationProp = DrawerNavigationProp<
+  AppDrawerParamList,
+  "Journal"
+>;
+
 const JournalOverviewScreen = () => {
   const db = useContext(DbContext);
 
   const JournalNav = useNavigation<JournalNavigationProp>();
+  const AppDrawerNav = useNavigation<AppDrawerNavigationProp>();
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -59,7 +67,15 @@ const JournalOverviewScreen = () => {
         { backgroundColor: useTheme().colors.background },
       ]}
     >
-      <CustomHeader />
+      <Appbar.Header mode="small" elevated>
+        <Appbar.Content title="Ix" titleStyle={{ fontSize: 30 }} />
+        <Appbar.Action
+          icon="menu"
+          onPress={() => {
+            AppDrawerNav.openDrawer();
+          }}
+        />
+      </Appbar.Header>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ flex: 1, marginBottom: 40 }}
@@ -123,7 +139,6 @@ const JournalOverviewScreen = () => {
             }}
           />
         </ScrollView>
-        {/**TODO: Add Due Payments */}
       </ScrollView>
       <FAB.Group
         style={{ position: "absolute" }}
