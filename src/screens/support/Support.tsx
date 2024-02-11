@@ -5,11 +5,9 @@ import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { AppDrawerParamList } from "../../routes/app/AppDrawer";
 import { useNavigation } from "@react-navigation/native";
 
-type Props = {};
-
 type AppNavigationProp = DrawerNavigationProp<AppDrawerParamList, "Support">;
 
-const Support = (props: Props) => {
+const Support = () => {
   const AppDrawerNav = useNavigation<AppNavigationProp>();
   return (
     <View style={{ flex: 1, backgroundColor: useTheme().colors.background }}>

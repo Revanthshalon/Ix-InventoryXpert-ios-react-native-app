@@ -124,6 +124,7 @@ const PaymentForm = () => {
     );
     dispatch(fetchUpcomingPayments(db!));
     dispatch(fetchAllCompanies(db!));
+    dispatch(fetchPendingPayments(db!));
     closeDeleteAlert();
     JournalNav.goBack();
   };
